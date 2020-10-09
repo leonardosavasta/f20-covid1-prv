@@ -1,0 +1,7 @@
+setwd("C:/Users/parth/Documents/CPSC6300/Labs/Group Project")
+data1 <- read.csv("6-15-2020.csv",header = TRUE, sep= ",")
+data2 <- read.csv("7-19-2020.csv",header = TRUE, sep= ",")
+data <- merge(data1, data2, by= c("FIPS","Admin2","Province_State","Country_Region","Lat","Long_","Combined_Key"))
+mask <- read.csv("Mask Usage.csv",header = TRUE, sep= ",")
+final_data <- merge(data,mask,by=c("FIPS"))
+View(final_data)
