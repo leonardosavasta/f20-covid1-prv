@@ -44,7 +44,7 @@ colnames(county_gdp)[2] <- "GDP 2018"
 final_data <- merge(final_data, county_gdp, by= c("County","Province_State"))
 
 # Reading data on Population_count by county
-pop_data1 <- read.csv("./data/population_data.csv",header = TRUE, sep= ",")
+pop_data1 <- read.csv("./data/population_data.csv",header = TRUE, sep= ",", encoding="UTF-8")
 
 # Data transformation
 pop_data1 <- separate(pop_data1, County_State, c("County", "State"), sep=",")
@@ -53,8 +53,7 @@ colnames(pop_data1)[2] <- "Province_State"
 colnames(pop_data1)[3] <- "Population_Count_2019"
 
 # Merging county Population_Count data with final data
-final_data <- merge(final_data, pop_data1, by= c("County","Province_State"))
-write.csv(final_data, "./data/final_data.csv")
+final_data <- merge(final_data, pop_data1, by= c("County","Province_State")
 
 # Read data on education level by county
 
