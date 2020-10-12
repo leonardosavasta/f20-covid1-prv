@@ -53,7 +53,7 @@ colnames(pop_data1)[2] <- "Province_State"
 colnames(pop_data1)[3] <- "Population_Count_2019"
 
 # Merging county Population_Count data with final data
-final_data <- merge(final_data, pop_data1, by= c("County","Province_State")
+final_data <- merge(final_data, pop_data1, by= c("County","Province_State"))
 
 # Read data on education level by county
 
