@@ -56,3 +56,14 @@ colnames(pop_data1)[3] <- "Population_Count_2019"
 final_data <- merge(final_data, pop_data1, by= c("County","Province_State"))
 write.csv(final_data, "./data/final_data.csv")
 
+# Read data on education level by county
+
+education_by_county <- read.csv("./data/Education.csv", header = TRUE, sep= ",")
+education_by_county <- education_by_county[, c(1,12,13,14,15)]
+colnames(education_by_county)[1] <- "FIPS"
+
+final_data <- merge(final_data, education_by_county, by= "FIPS")
+write.csv(final_data, "./data/final_data.csv")
+
+
+
