@@ -37,3 +37,12 @@ ggplot(
     y=(Confirmed.y / Population_Count_2019))) + 
 geom_point()
 
+# Plot Age vs Percentage of cases
+
+ggplot(
+  covid_data[
+    max_quantile((covid_data$Confirmed.y / covid_data$Population_Count_2019)),], 
+  aes(
+    x=Median_Age,
+    y=(Confirmed.y / Population_Count_2019))) + 
+  geom_point()

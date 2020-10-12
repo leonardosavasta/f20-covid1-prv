@@ -1,6 +1,6 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
 library(tidyr)
+library(stringr)
 
 # Reading COVID-19 cases data by county for dates
 
@@ -65,6 +65,18 @@ education_by_county <- education_by_county[, c(1,12,13,14,15)]
 colnames(education_by_county)[1] <- "FIPS"
 
 final_data <- merge(final_data, education_by_county, by= "FIPS")
+
+# Read data on median age per county
+
+avg_age <- read.csv("./data/MedianAge.csv", header=TRUE, sep=",")
+avg_age <- avg_age[2:nrow(avg_age),] 
+avg_age <- avg_age[grep("County", avg_age$GEONAME),]
+avg_age$GEONAME <- str_remove(avg_age$GEONAME, " County")
+avg_age <- separate(avg_age, GEONAME, c("County", "Province_State"), sep=", ")
+colnames(avg_age)[6] <- "Median_Age"
+
+final_data <- merge(final_data, avg_age[, c(3,4,6)], by=c("County", "Province_State"))
+
 write.csv(final_data, "./data/final_data.csv")
 
 
