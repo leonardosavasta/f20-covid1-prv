@@ -4,6 +4,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidyr)
 library(stringr)
 
+#function to clean the covid data files before merging
 renaming <- function(date) {
   
   data <- read.csv(date,header = TRUE, sep= ",")
@@ -21,6 +22,7 @@ renaming <- function(date) {
   return(data)
 }
 
+#list of data files
 dates <- c("06-17-2020.csv","06-18-2020.csv","06-19-2020.csv","06-20-2020.csv"
           ,"06-21-2020.csv","06-22-2020.csv","06-23-2020.csv","06-24-2020.csv"
           ,"06-25-2020.csv","06-26-2020.csv","06-27-2020.csv","06-28-2020.csv"
@@ -36,12 +38,14 @@ dates <- c("06-17-2020.csv","06-18-2020.csv","06-19-2020.csv","06-20-2020.csv"
 datalist <- list()
 l <- length(dates)
 
+#cleaning all the datafiles using the above defined function
 for (i in 1:l) {
   datalist[[i]] <- renaming(dates[i])
 }
 
 final_data <- datalist[[1]]
 
+#merging all covid datasets into 'final_data' dataframe
 for (j in 2:l){
   final_data <- merge(final_data, datalist[[j]], by= c("FIPS","County","Province_State"
                                                   ,"Country_Region","Lat","Long_"))
@@ -49,6 +53,8 @@ for (j in 2:l){
 
 mask <- read.csv("Mask_Usage.csv",header = TRUE, sep= ",")
 names(mask)[names(mask) == "COUNTYFP"] <- "FIPS"
+
+#merging mask usage data into 'final_data'
 final_data <- merge(mask,final_data, by = "FIPS")
 
 # Reading data on GDP by county
