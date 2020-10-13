@@ -1,27 +1,38 @@
+rm(list=ls())
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidyr)
 library(stringr)
 
-# Reading COVID-19 cases data by county for dates
+renaming <- function(date) {
+  
+  data <- read.csv(date,header = TRUE, sep= ",")
+  names(data)[names(data) == "Admin2"] <- "County"
+  drop <- c("Last_Update" , "Combined_Key")
+  data <- data[,!(names(data) %in% drop)]
+  s<-gsub("\\..*","",date)
+  names(data)[names(data) == "Confirmed"] <- paste("Confirmed",s,sep="_")
+  names(data)[names(data) == "Deaths"] <- paste("Deaths",s,sep="_")
+  names(data)[names(data) == "Recovered"] <- paste("Recovered",s,sep="_")
+  names(data)[names(data) == "Active"] <- paste("Active",s,sep="_")
+  names(data)[names(data) == "Incidence_Rate"] <- paste("Incidence_Rate",s,sep="_")
+  names(data)[names(data) == "Case.Fatality_Ratio"] <- paste("Case.Fatality_Ratio",s,sep="_")
+  
+  return(data)
+}
 
-data1 <- read.csv("./data/6-15-2020.csv",header = TRUE, sep= ",")
-data2 <- read.csv("./data/7-19-2020.csv",header = TRUE, sep= ",")
-
-data <- merge(data1, data2, by= c("FIPS","Admin2","Province_State","Country_Region","Lat","Long_","Combined_Key"))
-
-# Reading mask usage data by county
-
-mask <- read.csv("./data/Mask Usage.csv",header = TRUE, sep= ",")
-
-# Merging cases info data with mask usage data by county
-
-final_data <- merge(data,mask,by=c("FIPS"))
-
-
-colnames(final_data)[2] = "County"
+dates = c("07-11-2020.csv","07-12-2020.csv","07-13-2020.csv","07-14-2020.csv"
+          ,"07-15-2020.csv","07-16-2020.csv","07-17-2020.csv","07-18-2020.csv"
+          ,"07-19-2020.csv","07-20-2020.csv","07-21-2020.csv","07-22-2020.csv"
+          ,"07-23-2020.csv","07-24-2020.csv","07-25-2020.csv","07-26-2020.csv"
+          ,"07-27-2020.csv","07-28-2020.csv","07-29-2020.csv")
+datalist=list()
+l=length(dates)
+for (i in 1:l) {
+  datalist[[i]]=renaming(dates[i])
+}
 
 # Reading data on GDP by county
-
 county_gdp <- read.csv("./data/lagdp1219.csv", header = TRUE, sep= ",")
 
 # Data transformation
