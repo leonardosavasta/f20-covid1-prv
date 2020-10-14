@@ -57,27 +57,24 @@ names(mask)[names(mask) == "COUNTYFP"] <- "FIPS"
 #merging mask usage data into 'final_data'
 final_data <- merge(mask,final_data, by = "FIPS")
 
-# Reading data on GDP by county
-county_gdp <- read.csv("./data/lagdp1219.csv", header = TRUE, sep= ",")
-
-# Data transformation
-
 # Get list of all states
 states <- read.csv("./data/States.csv", header = TRUE, sep= ",")[,1]
 
-# Create column of states for each county
+# Read data on median household income per county
+median_income <- read.csv(
+  "./data/ACSST5Y2018.S1901_data_with_overlays_2020-10-14T145217.csv", 
+  header=TRUE, 
+  sep=",")
 
-county_gdp$Province_State <- NA
-county_gdp[county_gdp[,1] %in% states,"Province_State"] <- county_gdp[county_gdp[,1] %in% states,1]
-county_gdp <- fill(county_gdp, Province_State, .direction = "down")
-county_gdp <- county_gdp[!(county_gdp[,1] %in% states),]
-county_gdp <- county_gdp[, c(1,5,6)]
-colnames(county_gdp)[1] <- "County"
-colnames(county_gdp)[2] <- "GDP 2018"
+# Data transformation
+names(median_income) <- as.matrix(median_income[1,])
+median_income <- median_income[-1,]
+median_income <- median_income[,c("id", "Estimate!!Households!!Median income (dollars)")]
+median_income$id <- str_remove(median_income$id, "0500000US")
+colnames(median_income) <- c("FIPS", "Median_Household_Income")
 
-# Merging county GDP data with final data
-
-final_data <- merge(county_gdp, final_data, by= c("County","Province_State"))
+# Merging county median household income with final data
+final_data <- merge(median_income, final_data, by= c("FIPS"))
 
 # Reading data on Population_count by county
 pop_data1 <- read.csv("./data/population_data.csv",header = TRUE, sep= ",", encoding="UTF-8")
@@ -92,7 +89,6 @@ colnames(pop_data1)[3] <- "Population_Count_2019"
 final_data <- merge(pop_data1, final_data, by= c("County","Province_State"))
 
 final_data$Population_Count_2019 <- as.numeric(gsub(",","", final_data$Population_Count_2019))
-final_data$`GDP 2018` <- as.numeric(gsub(",","", final_data$`GDP 2018`))
 
 # Read data on education level by county
 
