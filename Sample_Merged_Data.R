@@ -7,7 +7,7 @@ library(stringr)
 #function to clean the covid data files before merging
 renaming <- function(date) {
   
-  data <- read.csv(date,header = TRUE, sep= ",")
+  data <- read.csv(paste("./data", date, sep="/"),header = TRUE, sep= ",")
   names(data)[names(data) == "Admin2"] <- "County"
   drop <- c("Last_Update" , "Combined_Key")
   data <- data[,!(names(data) %in% drop)]
@@ -51,7 +51,7 @@ for (j in 2:l){
                                                   ,"Country_Region","Lat","Long_"))
 }
 
-mask <- read.csv("Mask_Usage.csv",header = TRUE, sep= ",")
+mask <- read.csv("./data/Mask_Usage.csv",header = TRUE, sep= ",")
 names(mask)[names(mask) == "COUNTYFP"] <- "FIPS"
 
 #merging mask usage data into 'final_data'
@@ -104,16 +104,20 @@ final_data <- merge(education_by_county, final_data, by= "FIPS")
 
 # Read data on median age per county
 
-avg_age <- read.csv("./data/MedianAge.csv", header=TRUE, sep=",")
-avg_age <- avg_age[2:nrow(avg_age),] 
-avg_age <- avg_age[grep("County", avg_age$GEONAME),]
-avg_age$GEONAME <- str_remove(avg_age$GEONAME, " County")
-avg_age <- separate(avg_age, GEONAME, c("County", "Province_State"), sep=", ")
-colnames(avg_age)[6] <- "Median_Age"
+age_data <- read.csv(
+  "./data/ACSST5Y2018.S0101_data_with_overlays_2020-10-13T210419.csv", 
+  header=TRUE, 
+  sep=",")
+names(age_data) <- as.matrix(age_data[1,])
+age_data <- age_data[-1,]
+age_data <- age_data[,c("id", "Estimate!!Total!!Total population", "Estimate!!Total!!Total population!!SUMMARY INDICATORS!!Median age (years)")]
+age_data$id <- str_remove(age_data$id, "0500000US")
+colnames(age_data) <- c("FIPS", "Total_Population", "Median_Age")
 
-final_data <- merge(avg_age[, c(3,4,6)], final_data, by=c("County", "Province_State"))
+final_data <- merge(age_data[, c(1,3)], final_data, by=c("FIPS"))
 
 write.csv(final_data, "./data/final_data.csv")
 
 
+final_data <- read.csv('./data/final_data.csv')
 
