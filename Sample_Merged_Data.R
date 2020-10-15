@@ -18,7 +18,7 @@ renaming <- function(date) {
   names(data)[names(data) == "Active"] <- paste("Active",s,sep="_")
   names(data)[names(data) == "Incidence_Rate"] <- paste("Incidence_Rate",s,sep="_")
   names(data)[names(data) == "Case.Fatality_Ratio"] <- paste("Case.Fatality_Ratio",s,sep="_")
-  
+  data<-data[!(data$Country_Region!="US"),]
   return(data)
 }
 
