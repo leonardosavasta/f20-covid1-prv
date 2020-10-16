@@ -117,6 +117,7 @@ final_data <- merge(pop_data1, final_data, by= c("County","Province_State"))
 final_data$Population_Count_2019 <- as.numeric(gsub(",","", final_data$Population_Count_2019))
 
 #creating the response variable
+final_data$Covid_Infection_Rate_count <- (final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)
 final_data$Covid_Infection_Rate <- ((final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)/ final_data$`Confirmed_06-17-2020`)*100
 #rearranging columns
 final_data <- final_data %>% relocate("FIPS")
