@@ -19,7 +19,15 @@ clean_outliers <- function(data) {
 
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
 
+# Correlation between the predictors and the response variable
 
+cor(covid_data$Covid_Infection_Rate_count, covid_data$Population_Count_2019)
+cor(covid_data$Covid_Infection_Rate_count, covid_data$ALWAYS)
+cor(covid_data$Covid_Infection_Rate_count, covid_data$NEVER)
+cor(covid_data$Covid_Infection_Rate_count, covid_data$SOMETIMES)
+cor(covid_data$Covid_Infection_Rate_count, covid_data$FREQUENTLY)
+cor(as.numeric(as.character(covid_data$Median_Household_Income)), covid_data$Covid_Infection_Rate_count)
+cor(as.numeric(as.character(covid_data$Median_AGE)), covid_data$Covid_Infection_Rate_count)
 
 # Plot response variable distribution
 
