@@ -3,14 +3,16 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(ggplot2)
 
-max_quantile <- function(data, max_quantile=0.75) {
+clean_outliers <- function(data) {
   
   "
-  Function return indexes of data below max_quantile
+  Function cleans outliers from data
   "
   
-  rh <- quantile(data, probs=max_quantile, na.rm = TRUE)
-  return(data < rh)
+  outliers <- boxplot.stats(data)$out
+
+  return(!(data %in% outliers))
+  
 }
 
 # Read data with predictors and response
@@ -18,31 +20,62 @@ max_quantile <- function(data, max_quantile=0.75) {
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
 
 
-# Plot Median Household Income vs Percentage of cases
+
+# Plot response variable distribution
 
 ggplot(
-  covid_data[
-    max_quantile((covid_data$Confirmed_06.17.2020 / covid_data$Population_Count_2019)) 
-    & max_quantile(covid_data$Median_Household_Income),],
-  aes(x=Median_Household_Income, y=(Confirmed_06.17.2020 / Population_Count_2019))) + 
-geom_point()
-
-# Plot Education vs Percentage of cases
-
-ggplot(
-  covid_data[
-    max_quantile((covid_data$Confirmed_06.17.2020 / covid_data$Population_Count_2019)),], 
+  covid_data,
   aes(
-    x=Percent.of.adults.with.a.bachelor.s.degree.or.higher..2014.18, 
-    y=(Confirmed_06.17.2020 / Population_Count_2019))) + 
-geom_point()
+    x=Covid_Infection_Rate
+  )
+) +
+  geom_histogram()
 
-# Plot Age vs Percentage of cases
+# Plot response variable distribution removing outliers
+
+ggplot(
+  covid_data[clean_outliers(covid_data$Covid_Infection_Rate),],
+  aes(
+    x=Covid_Infection_Rate
+  )
+) +
+  geom_histogram(color="blue")
+
+# Plot Median Household Income vs response
 
 ggplot(
   covid_data[
-    max_quantile((covid_data$Confirmed_06.17.2020 / covid_data$Population_Count_2019)),], 
+    clean_outliers(covid_data$Covid_Infection_Rate) 
+    & clean_outliers(covid_data$Median_Household_Income),],
+  aes(x=Median_Household_Income, y=Covid_Infection_Rate)) + 
+geom_point()
+
+# Plot Education vs response
+
+ggplot(
+  covid_data[
+    clean_outliers(covid_data$Covid_Infection_Rate),], 
+  aes(
+    x=bachelor_degree, 
+    y=Covid_Infection_Rate)) + 
+geom_point()
+
+# Plot Age vs response
+
+ggplot(
+  covid_data[
+    clean_outliers(covid_data$Covid_Infection_Rate),], 
   aes(
     x=Median_Age,
-    y=(Confirmed_06.17.2020 / Population_Count_2019))) + 
+    y=Covid_Infection_Rate)) + 
   geom_point()
+
+# Plot County Population vs response
+
+ggplot(
+  covid_data[
+    clean_outliers(covid_data$Covid_Infection_Rate) &
+      clean_outliers(covid_data$Population_Count_2019),],
+  aes(x=Population_Count_2019, y=Covid_Infection_Rate)) + 
+  geom_point()
+

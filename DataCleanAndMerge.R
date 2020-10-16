@@ -99,6 +99,7 @@ age_data <- age_data[-1,]
 age_data <- age_data[,c("id", "Estimate!!Total!!Total population",
           "Estimate!!Total!!Total population!!SUMMARY INDICATORS!!Median age (years)")]
 age_data$id <- str_remove(age_data$id, "0500000US")
+age_data$Median_Age <- as.numeric(age_data$Median_Age)
 colnames(age_data) <- c("FIPS", "Total_Population", "Median_Age")
 
 final_data <- merge(age_data[, c(1,3)], final_data, by=c("FIPS"))
@@ -119,11 +120,15 @@ final_data$Population_Count_2019 <- as.numeric(gsub(",","", final_data$Populatio
 #creating the response variable
 final_data$Covid_Infection_Rate_count <- (final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)
 final_data$Covid_Infection_Rate <- ((final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)/ final_data$`Confirmed_06-17-2020`)*100
+
 #rearranging columns
 final_data <- final_data %>% relocate("FIPS")
+final_data <- final_data[is.finite(final_data$Covid_Infection_Rate),]
+cor(as.numeric(final_data$Median_Age), final_data$Covid_Infection_Rate)
 
 #wrting the final data set into a csv file
 write.csv(final_data, "./data/final_data.csv")
 
 #viewing final data set 
 View(final_data)
+
