@@ -13,6 +13,7 @@ The data folder consists of several datasets in .csv format collected from vario
 - lagdp.csv file contains the GDP values for each county from 2015 to 2018.
 - population_data.csv file contains the population figures for each county from 2010 to 2019.
 - The other datasets include data on COVID19 cases between June 17 and July 29.
+
 We merge all these datasets into a single dataset (i.e. final_data.csv). The final dataset consists of 2065 rows and 83 columns in total.
 Some of the major fields/predictors in the final dataset are:
 - FIPS: County codes
