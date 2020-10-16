@@ -2,7 +2,7 @@
 It is an inevitable reality that we are living in a world of COVID. But, to get back
 to a sense of normalcy, it is prudent that we take certain necessary measures to
 combat this virus.
-So, our projec involves understanding the various factors that influence the spread (and maybe fatality)
+So, our project involves understanding the various factors that influence the spread (and maybe fatality)
 rate of COVID-19.
 
 # Data:
