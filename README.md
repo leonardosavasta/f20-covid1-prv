@@ -21,6 +21,7 @@ Some of the major fields/predictors in the final dataset are:
 - Province_State: Name of the state to which the county belongs
 - Population_Count_2019: The population count of each county
 - Median_Age: Median age of the population in each county
+- Median_Household_Income: The GDP values of each county
 - NEVER: The estimated share of people in this county who would say never in response to the question “How often do you wear a mask in public when you expect to be within six feet of another person?”
 - RARELY: The estimated share of people in this county who would say rarely
 - SOMETIMES: The estimated share of people in this county who would say sometimes
