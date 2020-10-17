@@ -21,17 +21,16 @@ names(covid_data[1:18])
 #response variable
 names(covid_data[82])
 
+#summary of the data set
+summary(covid_data)
+
 #function to remove outliers
 clean_outliers <- function(data) {
-  
   "
   Function cleans outliers from data
   "
-  
   outliers <- boxplot.stats(data)$out
-
   return(!(data %in% outliers))
-  
 }
 
 # plotting response variable distribution
@@ -50,95 +49,67 @@ ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate)
                   & clean_outliers(covid_data$Population_Count_2019),]
        ,aes(x=Population_Count_2019, y=Covid_Infection_Rate)) + geom_point()
 
-# Correlation between the predictors and the response variable
-cor(covid_data$Covid_Infection_Rate_count, covid_data$Population_Count_2019)
-cor(covid_data$Covid_Infection_Rate_count, covid_data$ALWAYS)
-cor(covid_data$Covid_Infection_Rate_count, covid_data$NEVER)
-cor(covid_data$Covid_Infection_Rate_count, covid_data$SOMETIMES)
-cor(covid_data$Covid_Infection_Rate_count, covid_data$FREQUENTLY)
-cor(as.numeric(as.character(covid_data$Median_Household_Income)), covid_data$Covid_Infection_Rate_count)
-cor(as.numeric(as.character(covid_data$Median_Age)), covid_data$Covid_Infection_Rate_count)
+#converting Median_Age column to numerical format
+covid_data$Median_Age <- as.numeric(covid_data$Median_Age)
+
+#finding min and max values of Median_Age column
+min(covid_data$Median_Age)
+max(covid_data$Median_Age)
+
+# setting up cut-off values 
+breaks <- c(23.4,30,40,50,67)
+
+# specifying interval/bin labels
+tags <- c("[23.4-30)","[30-40)", "[40-50)" , "[50-67)")
+
+# bucketing values into bins
+group_tags <- cut(covid_data$Median_Age, breaks=breaks,include.lowest=TRUE
+                  ,right=FALSE,labels=tags)
+
+# inspecting bins
+summary(group_tags)
+
+#plotting frquecy plot for bins
+ggplot(data = as_tibble(group_tags), mapping = aes(x=value)) + geom_bar() + labs(x='Age',y='Frequency')
+
+# plotting age vs response
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=Median_Age,y=Covid_Infection_Rate)) + geom_point()
+
+# plotting Education vs response
+
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=Less_than_high_school_diploma,y=Covid_Infection_Rate)) + geom_point()
+
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=bachelor_degree,y=Covid_Infection_Rate)) + geom_point()
 
 
-# Plot response variable distribution
+# plotting Median Household Income vs response
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate)
+                  & clean_outliers(covid_data$Median_Household_Income),]
+       ,aes(x=Median_Household_Income, y=Covid_Infection_Rate)) + geom_point()
 
-ggplot(
-  covid_data,
-  aes(
-    x=Covid_Infection_Rate
-  )
-) +
-  geom_histogram()
+#plotting mask usage data vs response
 
-# Plot response variable distribution removing outliers
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=ALWAYS, y=Covid_Infection_Rate)) + geom_point()
 
-ggplot(
-  covid_data[clean_outliers(covid_data$Covid_Infection_Rate),],
-  aes(
-    x=Covid_Infection_Rate
-  )
-) +
-  geom_histogram(aes(fill=..count..)) + 
-  ggtitle("Distribution of Covid Infection Rate per County") +
-  xlab("Covid Invection Rate") + ylab("Count")
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=FREQUENTLY, y=Covid_Infection_Rate)) + geom_point()
 
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=NEVER, y=Covid_Infection_Rate)) + geom_point()
 
-# Plot Median Household Income vs response
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate)
+                  & clean_outliers(covid_data$Population_Count_2019),]
+       ,aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate)) + geom_point()
 
-ggplot(
-  covid_data[
-    clean_outliers(covid_data$Covid_Infection_Rate) 
-    & clean_outliers(covid_data$Median_Household_Income),],
-  aes(x=Median_Household_Income, y=Covid_Infection_Rate)) + 
-geom_point() +
-  ggtitle("Socioeconomic Status vs Covid Infection Rate") +
-  xlab("Median Household Income") + ylab("Covid infection rate")
+#calculating the correlation between variables
 
-# Plot Education vs response
+cor(covid_data[4:15],covid_data[4:15])
 
-ggplot(
-  covid_data[
-    clean_outliers(covid_data$Covid_Infection_Rate),], 
-  aes(
-    x=associate_degree+bachelor_degree, 
-    y=Covid_Infection_Rate)) + 
-  geom_point() +
-  ggtitle("Education vs Covid Infection Rate") +
-  xlab("Ratio of Population With Associate Degree or Higher") + ylab("Covid infection rate")
-
-# Plot Age vs response
-
-ggplot(
-  covid_data[
-    clean_outliers(covid_data$Covid_Infection_Rate),], 
-  aes(
-    x=Median_Age,
-    y=Covid_Infection_Rate)) + 
-  geom_point() +
-  ggtitle("Age vs Covid Infection Rate") +
-  xlab("County median age") + ylab("Covid infection rate")
+cor(covid_data[4:15],covid_data$Covid_Infection_Rate)
 
 
-# Plot County Population vs response
-
-ggplot(
-  covid_data[
-    clean_outliers(covid_data$Covid_Infection_Rate) &
-      clean_outliers(covid_data$Population_Count_2019),],
-  aes(x=Population_Count_2019, y=Covid_Infection_Rate)) + 
-  geom_point() +
-  ggtitle("Population vs Covid Infection Rate") +
-  xlab("County population") + ylab("Covid infection rate")
-
-
-# Plot Usage of masks vs response
-
-ggplot(
-  covid_data[
-    clean_outliers(covid_data$Covid_Infection_Rate) &
-      clean_outliers(covid_data$Population_Count_2019),],
-  aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate)) + 
-  geom_point() +
-  ggtitle("Mask Usage vs Covid Infection Rate") +
-  xlab("Ratio of population that always/freq. wears masks") + ylab("Covid infection rate")
 
