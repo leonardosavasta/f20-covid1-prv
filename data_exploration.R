@@ -1,7 +1,7 @@
 # Plotting predictors vs response value
+library(ggplot2)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-library(ggplot2)
 
 clean_outliers <- function(data) {
   
@@ -27,7 +27,7 @@ cor(covid_data$Covid_Infection_Rate_count, covid_data$NEVER)
 cor(covid_data$Covid_Infection_Rate_count, covid_data$SOMETIMES)
 cor(covid_data$Covid_Infection_Rate_count, covid_data$FREQUENTLY)
 cor(as.numeric(as.character(covid_data$Median_Household_Income)), covid_data$Covid_Infection_Rate_count)
-cor(as.numeric(as.character(covid_data$Median_AGE)), covid_data$Covid_Infection_Rate_count)
+cor(as.numeric(as.character(covid_data$Median_Age)), covid_data$Covid_Infection_Rate_count)
 
 # Plot response variable distribution
 
@@ -64,7 +64,7 @@ ggplot(
   covid_data[
     clean_outliers(covid_data$Covid_Infection_Rate),], 
   aes(
-    x=bachelor_degree, 
+    x=associate_degree+bachelor_degree, 
     y=Covid_Infection_Rate)) + 
 geom_point()
 
@@ -85,5 +85,14 @@ ggplot(
     clean_outliers(covid_data$Covid_Infection_Rate) &
       clean_outliers(covid_data$Population_Count_2019),],
   aes(x=Population_Count_2019, y=Covid_Infection_Rate)) + 
+  geom_point()
+
+# Plot Usage of masks vs response
+
+ggplot(
+  covid_data[
+    clean_outliers(covid_data$Covid_Infection_Rate) &
+      clean_outliers(covid_data$Population_Count_2019),],
+  aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate)) + 
   geom_point()
 
