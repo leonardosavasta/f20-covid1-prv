@@ -1,8 +1,27 @@
-# Plotting predictors vs response value
-library(ggplot2)
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
+# loading ggplot library
+library(ggplot2)
+
+# Read data with predictors and response
+covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
+
+#dimensions of final data
+dim(covid_data)
+
+#unique observations
+unique(covid_data)
+
+#first 5 rows of the data set
+head(covid_data,n=5)
+
+#first 18 variables
+names(covid_data[1:18])
+
+#response variable
+names(covid_data[82])
+
+#function to remove outliers
 clean_outliers <- function(data) {
   
   "
@@ -15,12 +34,23 @@ clean_outliers <- function(data) {
   
 }
 
-# Read data with predictors and response
+# plotting response variable distribution
+ggplot(covid_data, aes(x=Covid_Infection_Rate)) + geom_histogram()
 
-covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
+# plotting response variable distribution after removing outliers
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
+       ,aes(x=Covid_Infection_Rate)) +geom_histogram(color="blue")
+
+#plotting population variable distribution
+ggplot(covid_data[clean_outliers(covid_data$Population_Count_2019),]
+       ,aes(x=Population_Count_2019)) +geom_histogram(color="red")
+
+# plotting County Population vs response
+ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate)
+                  & clean_outliers(covid_data$Population_Count_2019),]
+       ,aes(x=Population_Count_2019, y=Covid_Infection_Rate)) + geom_point()
 
 # Correlation between the predictors and the response variable
-
 cor(covid_data$Covid_Infection_Rate_count, covid_data$Population_Count_2019)
 cor(covid_data$Covid_Infection_Rate_count, covid_data$ALWAYS)
 cor(covid_data$Covid_Infection_Rate_count, covid_data$NEVER)
@@ -28,6 +58,7 @@ cor(covid_data$Covid_Infection_Rate_count, covid_data$SOMETIMES)
 cor(covid_data$Covid_Infection_Rate_count, covid_data$FREQUENTLY)
 cor(as.numeric(as.character(covid_data$Median_Household_Income)), covid_data$Covid_Infection_Rate_count)
 cor(as.numeric(as.character(covid_data$Median_Age)), covid_data$Covid_Infection_Rate_count)
+
 
 # Plot response variable distribution
 
@@ -50,6 +81,7 @@ ggplot(
   geom_histogram(aes(fill=..count..)) + 
   ggtitle("Distribution of Covid Infection Rate per County") +
   xlab("Covid Invection Rate") + ylab("Count")
+
 
 # Plot Median Household Income vs response
 
@@ -86,6 +118,7 @@ ggplot(
   ggtitle("Age vs Covid Infection Rate") +
   xlab("County median age") + ylab("Covid infection rate")
 
+
 # Plot County Population vs response
 
 ggplot(
@@ -96,6 +129,7 @@ ggplot(
   geom_point() +
   ggtitle("Population vs Covid Infection Rate") +
   xlab("County population") + ylab("Covid infection rate")
+
 
 # Plot Usage of masks vs response
 
