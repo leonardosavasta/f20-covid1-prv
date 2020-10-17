@@ -127,7 +127,7 @@ final_data <- final_data %>% relocate("FIPS")
 final_data <- final_data[is.finite(final_data$Covid_Infection_Rate),]
 
 #wrting the final data set into a csv file
-write.csv(final_data, "./data/final_data.csv")
+write.csv(final_data, "./data/final_data.csv", row.names=FALSE)
 
 #viewing final data set 
 View(final_data)
