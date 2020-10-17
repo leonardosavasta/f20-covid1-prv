@@ -38,7 +38,7 @@ ggplot(covid_data, aes(x=Covid_Infection_Rate)) + geom_histogram()
 
 # plotting response variable distribution after removing outliers
 ggplot(covid_data[clean_outliers(covid_data$Covid_Infection_Rate),]
-       ,aes(x=Covid_Infection_Rate)) +geom_histogram(color="blue")
+       ,aes(x=Covid_Infection_Rate)) +geom_histogram(aes(fill=..count..))
 
 #plotting population variable distribution
 ggplot(covid_data[clean_outliers(covid_data$Population_Count_2019),]
