@@ -17,9 +17,9 @@ summary(lm.fit)
 
 fit2 <- smooth.spline(data$Covid_Infection_Rate_Average, data$Median_Household_Income, cv=TRUE)
 
-gam2 <- gam(Covid_Infection_Rate_Average ~ s(Median_Age, 3) + s(Median_Household_Income, 3) + s(Education, 3) + s(MaskUsage, 3), data=data)
+gam2 <- gam(Covid_Infection_Rate_Average ~ s(log1p(Median_Age), 3) + s(log1p(Median_Household_Income), 3) + s(log1p(Education), 3) + s(log1p(MaskUsage), 3) + s(log1p(Population_Count_2019),3), data=data)
 
-par(mfrow=c(1,4))
+par(mfrow=c(3,2))
 par(mar=c(3,3,3,3))
 plot(gam2, se=TRUE, col="blue")
 
