@@ -29,6 +29,21 @@ data_cleaning <- function(date) {
   return(data)
 }
 
+calculate_average_proportion <- function(values) {
+
+  "
+  Function calculates the average of the daily rate of new cases over all dates
+  "
+  
+  sum_daily_chg <- 0
+  
+  for (idx in c(2:length(values))) {
+    sum_daily_chg <- sum_daily_chg + (values[idx] - values[idx-1]) / values[idx-1]
+  }
+  
+  return(sum_daily_chg / (length(values) -1) )
+}
+
 #list of data files
 dates <- c("06-17-2020.csv","06-19-2020.csv","06-21-2020.csv"
            ,"06-23-2020.csv","06-25-2020.csv","06-27-2020.csv"
@@ -118,6 +133,7 @@ final_data <- merge(pop_data1, final_data, by= c("County","Province_State"))
 final_data$Population_Count_2019 <- as.numeric(gsub(",","", final_data$Population_Count_2019))
 
 #creating the response variable
+final_data$Covid_Infection_Rate_Average <- apply(final_data[,seq(16,80, by=3)], 1, function(x) calculate_average_proportion(x))
 final_data$Covid_Infection_Rate <- ((final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)/ final_data$`Confirmed_06-17-2020`)*100
 
 #rearranging columns
