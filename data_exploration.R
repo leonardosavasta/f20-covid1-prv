@@ -77,7 +77,7 @@ ggplot(covid_data
 
 # plotting Median Household Income vs response
 ggplot(covid_data
-       ,aes(x=Median_Household_Income, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=Median_Household_Income, y=Covid_Infection_Rate_Average)) + geom_point() 
 
 #plotting mask usage data vs response
 
