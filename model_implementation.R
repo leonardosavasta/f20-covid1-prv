@@ -1,6 +1,6 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list=ls())
-library(gam)
+library(mgcv)
 
 # Read data with predictors and response
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
@@ -19,11 +19,15 @@ summary(lm.fit)
 fit2 <- smooth.spline(data$Covid_Infection_Rate_Average, data$Median_Household_Income, cv=TRUE)
 
 gam2 <- gam(Covid_Infection_Rate_Average ~ 
-    s(log1p(Median_Age), 2) + 
-    s(log1p(Median_Household_Income), 1) + 
-    s(log1p(Education), 3) + 
-    s(log1p(MaskUsage), 2) +
-    s(log1p(Population_Count_2019), 2), 
+    s(log1p(Median_Age), m=2) + 
+    s(log1p(Median_Household_Income), m=1) + 
+    s(log1p(Education), m=3) + 
+    s(log1p(MaskUsage), m=2) +
+    s(log1p(Population_Count_2019), m=2), 
+    data=data)
+
+gam2 <- gam(Covid_Infection_Rate_Average ~ 
+    s(log1p(Median_Age), m=2),
     data=data)
 
 par(mfrow=c(3,2))
