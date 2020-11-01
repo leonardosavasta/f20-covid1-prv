@@ -22,10 +22,11 @@ summary(lm.fit)
 cv.error.10 <- cv.glm(data, lm.fit, K=10)
 cv.error.10$delta
 
+set.seed(2020)
 #sampling data to obtain observations
 sampledata=data[sample(nrow(data), 3),]
 sampledata
 
 #predicting the response for the sampled data
 pred.data <- data.frame(sampledata)
-predict(lm.fit, pred.data, type="response")
+predict(lm.fit, pred.data)
