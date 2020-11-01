@@ -23,8 +23,8 @@ cv.error.10 <- cv.glm(data, lm.fit, K=10)
 cv.error.10$delta
 
 set.seed(2020)
-#sampling data to obtain observations
-sampledata=data[sample(nrow(data), 3),]
+#sampling data to obtain 6 observations
+sampledata=data[sample(nrow(data), 6),]
 sampledata
 
 #predicting the response for the sampled data
