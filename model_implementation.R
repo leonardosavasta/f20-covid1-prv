@@ -1,6 +1,7 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list=ls())
 library(mgcv)
+library(ggplot2)
 
 # Read data with predictors and response
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
@@ -15,12 +16,15 @@ data$Education <- covid_data$associate_degree + covid_data$bachelor_degree
 
 #fitting a multiple linear regression model
 library(boot)
-lm.fit <- glm(Covid_Infection_Rate_Average ~ ., data=data)
+lm.fit <- lm(Covid_Infection_Rate_Average ~ ., data=data)
 summary(lm.fit)
 
 #performing 10 fold cross validation
 cv.error.10 <- cv.glm(data, lm.fit, K=10)
 cv.error.10$delta
+
+ggplot(data, aes(x=Median_Age, y=Covid_Infection_Rate_Average)) + geom_point() + 
+  geom_smooth(method='lm')
 
 #sampling data to obtain observations
 sampledata=data[sample(nrow(data), 3),]
