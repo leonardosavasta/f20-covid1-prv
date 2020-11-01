@@ -29,26 +29,3 @@ sampledata
 #predicting the response for the sampled data
 pred.data <- data.frame(sampledata)
 predict(lm.fit, pred.data, type="response")
-
-# #fitting an alternative model
-# fit2 <- smooth.spline(data$Covid_Infection_Rate_Average, data$Median_Household_Income, cv=TRUE)
-# 
-# gam2 <- gam(Covid_Infection_Rate_Average ~
-#     s(log1p(Median_Age), m=2) +
-#     s(log1p(Median_Household_Income), m=1) +
-#     s(log1p(Education), m=3) +
-#     s(log1p(MaskUsage), m=2) +
-#     s(log1p(Population_Count_2019), m=2),
-#     data=data)
-# 
-# gam2 <- gam(Covid_Infection_Rate_Average ~
-#     s(log1p(Median_Age), m=2),
-#     data=data)
-# 
-# par(mfrow=c(3,2))
-# par(mar=c(3,3,3,3))
-# plot(gam2, se=TRUE, col="blue")
-# 
-# gam2
-# head(data)
-# summary(gam2)
