@@ -31,7 +31,7 @@ sampledata
 pred.data <- data.frame(sampledata)
 predict(lm.fit, pred.data)
 
-# fitting alternative(i.e. non-linear models)
+# fitting alternative models(i.e. non-linear models)
 # fit Covid_Infection_Rate_Average with each individual predictors and produce plot of the data and smoothing line
 fit <- smooth.spline(data$Covid_Infection_Rate_Average, data$Median_Household_Income, df=16)
 fit2 <- smooth.spline(data$Covid_Infection_Rate_Average, data$Median_Household_Income, cv=TRUE)
