@@ -51,3 +51,9 @@ varImpPlot(rf.data, type=1)
 lm.data <- lm(Covid_Infection_Rate_Average ~ ., data, subset=train)
 yhat.lm <- predict(lm.data, data[test,])
 mean((yhat.lm-data.test)^2)
+
+
+
+
+
+
