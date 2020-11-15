@@ -35,7 +35,7 @@ data.test <- data[test, "Covid_Infection_Rate_Average"]
 data.train <- data[train, "Covid_Infection_Rate_Average"]
 
 # Training smoothing splines model
-gam.fit <- gam(Covid_Infection_Rate_Average ~ s(Median_Household_Income, m=4) + s(Population_Count_2019, m=5) + s(Median_Age, m=4) + s(MaskUsage, m=5), data=data[train,])
+gam.fit <- gam(Covid_Infection_Rate_Average ~ s(Median_Household_Income, m=4) + s(Population_Count_2019, m=5) + s(Median_Age, m=4) + s(MaskUsage, m=5), data=data[train,], select=TRUE)
 yhat.gam <- predict(gam.fit, data[test,])
 mean((yhat.gam - data.test)^2)
 
@@ -44,3 +44,5 @@ ggplot(data[test,],
     aes(x=yhat.gam, y=Covid_Infection_Rate_Average)) + 
     geom_point(color="white") +
     geom_smooth(method='lm', color="red", size=0.5, alpha=0.8)
+
+
