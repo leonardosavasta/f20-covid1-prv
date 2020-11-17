@@ -10,6 +10,7 @@ rm(list=ls())
 library(randomForest)
 library(ggplot2)
 library(tree)
+library(gbm)
 
 # Read data with predictors and response
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
@@ -78,5 +79,14 @@ yhat.lm <- predict(lm.data, data[test,])
 data.test <- data[test, "Covid_Infection_Rate_Average"]
 mean((yhat.lm-data.test)^2)
 
+#Boosting
+boost.data <- gbm(Covid_Infection_Rate_Average~., data=data[train,], distribution="gaussian", n.trees=5000, interaction.depth=4, shrinkage=0.27)
+summary(boost.data)
+# we can see that Population_Count_2019 and Median_Household_Income are the most important variables
+par(mfrow=c(1,2))
+plot(boost.data, i="Population_Count_2019")
+plot(boost.data, i="Median_Household_Income")
 
-
+# Prediction using the boosted model
+yhat.boost <- predict(boost.data, newdata=data[test,], n.trees=5000)
+mean((yhat.boost-data.test)^2)
