@@ -9,6 +9,7 @@ rm(list=ls())
 
 library(randomForest)
 library(ggplot2)
+library(tree)
 
 # Read data with predictors and response
 covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
@@ -53,7 +54,29 @@ yhat.lm <- predict(lm.data, data[test,])
 mean((yhat.lm-data.test)^2)
 
 
+# fitting regression tree model
+tree.data <- tree(Covid_Infection_Rate_Average ~ ., data, subset=train)
+summary(tree.data)
+plot(tree.data)
+text(tree.data)
 
+# pruning the tree
+prune.data <- prune.tree(tree.data, best=2)
+plot(prune.data)
+text(prune.data)
+
+# using the unpruned tree to make predictions
+yhat.tree <- predict(tree.data, data[test,])
+data.test <- data[test, "Covid_Infection_Rate_Average"]
+plot(yhat.tree, data.test)
+abline(0,1)
+mean((yhat.tree-data.test)^2)
+
+# comparing the results to a linear model
+lm.data <- lm(Covid_Infection_Rate_Average~ ., data, subset=train)
+yhat.lm <- predict(lm.data, data[test,])
+data.test <- data[test, "Covid_Infection_Rate_Average"]
+mean((yhat.lm-data.test)^2)
 
 
 
