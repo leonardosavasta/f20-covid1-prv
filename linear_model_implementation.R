@@ -25,7 +25,7 @@ cv.error.10$delta
 
 
 
-# PREDICTIONS
+# ******* OUT OF SAMPLE PREDICTIONS *******
 
 
 set.seed(2020)
@@ -85,7 +85,7 @@ predict(lm.fit, pred.data)
 
 
 
-
+# ******* FITTING ALTERNATIVE MODELS *******
 
 # fitting alternative models(i.e. non-linear models)
 # fit Covid_Infection_Rate_Average with each individual predictors and produce plot of the data and smoothing line
