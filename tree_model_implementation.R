@@ -92,3 +92,61 @@ plot(boost.data, i="Median_Household_Income")
 # Prediction using the boosted model
 yhat.boost <- predict(boost.data, newdata=data[test,], n.trees=5000)
 mean((yhat.boost-data.test)^2)
+
+
+# ******* OUT OF SAMPLE PREDICTIONS *******
+
+# Constructing interesting predictions
+
+# The following is similar to what we expect for a county such as Greenville
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 50000,
+    MaskUsage= 0.5
+)
+
+predict(rf.data, pred.data)
+
+# We change the median household income increasing it by 30,000
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 80000,
+    MaskUsage= 0.5
+)
+
+predict(rf.data, pred.data)
+
+# Our response variable (rate of infection) slightly decreases
+# by modifying the median household income parameter
+
+# We change the median household income increasing it by 60,000
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 110000,
+    MaskUsage= 0.5
+)
+
+predict(rf.data, pred.data)
+
+# The response variable (rate of infection) remains almost the same as the previous case
+# by modifying the median household income parameter by a higher number
+
+# We change the Mask Usage from 0.5 to 0.9
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 50000,
+    MaskUsage= 0.9
+)
+
+predict(rf.data, pred.data)
+
+# Our response variable (rate of infection) considerably decreases by modifying
+# the mask usage parameter

@@ -101,4 +101,4 @@ pred.data <- data.frame(
 predict(gam.fit, pred.data)
 
 # Our response variable (rate of infection) slightly decreases by modifying
-# the mask usage parameter. But the decrease is not as dramatic as the previous case.
+# the mask usage parameter
