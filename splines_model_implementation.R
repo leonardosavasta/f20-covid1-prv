@@ -1,9 +1,9 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Visualization preferences
-# library(ggthemes)
-# par(bg = '#222222', fg = 'white', col='white', col.axis='white', col.lab='white', col.main='white', col.sub='white')
-# theme_set(theme_par())
+library(ggthemes)
+par(bg = '#222222', fg = 'white', col='white', col.axis='white', col.lab='white', col.main='white', col.sub='white')
+theme_set(theme_par())
 
 rm(list=ls())
 
@@ -45,6 +45,30 @@ ggplot(data[test,],
     geom_point(color="white") +
     geom_smooth(method='lm', color="red", size=0.5, alpha=0.8)
 
+
+
+# Performing Principal Component Analysis
+
+par(mfrow=c(1,1))
+prc.data <- prcomp(data, scale=TRUE)
+biplot(prc.data, scale=0, xlim=c(-5,5), ylim=c(-5,5), xlabs=rep(".", nrow(data)), col=c("red", "white"))
+
+# Plotting results of gam model
+
+age <- seq(from=20, to=70, by=10)
+population <- seq(from=10000, to=500000, by=50000)
+income <- seq(from=20000, to=100000, by=20000)
+mask <- seq(from=0, to=1, by=0.1)
+education <- seq(from=0, to=1, by=0.1)
+
+points.gam <- expand.grid(age, population, income, mask, education)
+names(points.gam) <- c("Median_Age", "Population_Count_2019", "Median_Household_Income", "MaskUsage", "Education")
+
+Covid_Infection_Rate_Average <- predict(gam.fit, points.gam)
+points.gam$Covid_Infection_Rate_Average <- Covid_Infection_Rate_Average
+
+gam.pca <- predict(prc.data, points.gam)
+points(x=gam.pca[,1], y=gam.pca[,2])
 
 # ******* OUT OF SAMPLE PREDICTIONS *******
 
