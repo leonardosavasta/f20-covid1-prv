@@ -46,3 +46,59 @@ ggplot(data[test,],
     geom_smooth(method='lm', color="red", size=0.5, alpha=0.8)
 
 
+# ******* OUT OF SAMPLE PREDICTIONS *******
+
+# Constructing interesting predictions
+
+# The following is similar to what we expect for a county such as Greenville
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 50000,
+    MaskUsage= 0.5
+)
+
+predict(gam.fit, pred.data)
+
+# We change the median household income increasing it by 30,000
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 80000,
+    MaskUsage= 0.5
+)
+
+predict(gam.fit, pred.data)
+
+# Our response variable (rate of infection) dramatically decreases
+# by modifying the median household income parameter
+
+# We change the median household income increasing it by 60,000
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 110000,
+    MaskUsage= 0.5
+)
+
+predict(gam.fit, pred.data)
+
+# The response variable (rate of infection) dramatically decreases again
+# almost linearly by modifying the median household income parameter
+
+# We change the Mask Usage from 0.5 to 0.9
+pred.data <- data.frame(
+    Population_Count_2019= 500000,
+    Education= 0.30,
+    Median_Age= 40,
+    Median_Household_Income= 50000,
+    MaskUsage= 0.9
+)
+
+predict(gam.fit, pred.data)
+
+# Our response variable (rate of infection) slightly decreases by modifying
+# the mask usage parameter. But the decrease is not as dramatic as the previous case.
