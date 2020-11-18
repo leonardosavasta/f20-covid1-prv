@@ -1,12 +1,8 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-# Visualization preferences
-#library(ggthemes)
-par(bg = '#222222', fg = 'white', col='white', col.axis='white', col.lab='white', col.main='white', col.sub='white')
-#theme_set(theme_par())
-
 rm(list=ls())
 
+library(gam)
 library(mgcv)
 library(ggplot2)
 
@@ -17,35 +13,61 @@ covid_data <- read.csv("./data/final_data.csv", header = TRUE, sep= ",")
 dim(covid_data)
 
 # Creating data frame with model predictors
-data <- covid_data[, c("Population_Count_2019", 
-    "Median_Age", 
-    "Median_Household_Income", 
-    "Covid_Infection_Rate_Average")]
-
+data <- covid_data[, c("Population_Count_2019","Median_Age","Median_Household_Income","Covid_Infection_Rate_Average")]
 data$MaskUsage <- covid_data$RARELY + covid_data$FREQUENTLY + covid_data$ALWAYS
 data$Education <- covid_data$associate_degree + covid_data$bachelor_degree
 
-# Sampling training and testing data
-set.seed(1)
-N <- nrow(data)
-train <- sample(1:N, N/1.5)
-test <- seq(1:N)[-train]
+attach(data)
 
-data.test <- data[test, "Covid_Infection_Rate_Average"]
-data.train <- data[train, "Covid_Infection_Rate_Average"]
+# fitting non-linear models
 
-# Training smoothing splines model
-gam.fit <- gam(Covid_Infection_Rate_Average ~ s(Median_Household_Income, m=4) + s(Population_Count_2019, m=5) + s(Median_Age, m=4) + s(MaskUsage, m=5), data=data[train,], select=TRUE)
-yhat.gam <- predict(gam.fit, data[test,])
-mean((yhat.gam - data.test)^2)
+# fitting Covid_Infection_Rate_Average with Median_Household_Income and producing a plot of the data and smoothing line
+fit <- smooth.spline(Covid_Infection_Rate_Average,Median_Household_Income, df=16)
+fit2 <- smooth.spline(Covid_Infection_Rate_Average,Median_Household_Income, cv=TRUE)
 
-# Plotting true response vs predicted values
-ggplot(data[test,], 
-    aes(x=yhat.gam, y=Covid_Infection_Rate_Average)) + 
-    geom_point(color="white") +
-    geom_smooth(method='lm', color="red", size=0.5, alpha=0.8)
+plot(Covid_Infection_Rate_Average,Median_Household_Income, cex=.5, col="darkgray")
+lines(fit,  col="red", lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright", legend=c("16 DF","11.4 DF (LOOCV)"), col=c("red", "blue"),lty=1, lwd=2, cex=.8)
 
+# fitting Covid_Infection_Rate_Average with Population_Count_2019 and producing a plot of the data and smoothing line
+fit <- smooth.spline(Covid_Infection_Rate_Average,Population_Count_2019, df=16)
+fit2 <- smooth.spline(Covid_Infection_Rate_Average,Population_Count_2019, cv=TRUE)
 
+plot(Covid_Infection_Rate_Average,Population_Count_2019, cex=.5, col="darkgray")
+lines(fit,  col="red", lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright", legend=c("16 DF","6.6 DF (LOOCV)"), col=c("red", "blue"),lty=1, lwd=2, cex=.8)
+
+# fitting Covid_Infection_Rate_Average with Median_Age and producing a plot of the data and smoothing line
+fit <- smooth.spline(Covid_Infection_Rate_Average,Median_Age, df=16)
+fit2 <- smooth.spline(Covid_Infection_Rate_Average,Median_Age, cv=TRUE)
+
+plot(Covid_Infection_Rate_Average,Median_Age, cex=.5, col="darkgray")
+lines(fit,  col="red", lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright", legend=c("16 DF","3 DF (LOOCV)"), col=c("red", "blue"),lty=1, lwd=2, cex=.8)
+
+# fitting Covid_Infection_Rate_Average with MaskUsage and producing a plot of the data and smoothing line
+fit <- smooth.spline(Covid_Infection_Rate_Average,MaskUsage, df=16)
+fit2 <- smooth.spline(Covid_Infection_Rate_Average,MaskUsage, cv=TRUE)
+
+plot(Covid_Infection_Rate_Average,MaskUsage, cex=.5, col="darkgray")
+lines(fit,  col="red", lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright", legend=c("16 DF","11.6 DF (LOOCV)"), col=c("red", "blue"),lty=1, lwd=2, cex=.8)
+
+# fitting Covid_Infection_Rate_Average with Education and producing a plot of the data and smoothing line
+fit <- smooth.spline(Covid_Infection_Rate_Average,Education, df=16)
+fit2 <- smooth.spline(Covid_Infection_Rate_Average,Education, cv=TRUE)
+
+plot(Covid_Infection_Rate_Average,Education, cex=.5, col="darkgray")
+lines(fit,  col="red", lwd=2)
+lines(fit2, col="blue", lwd=2)
+legend("topright", legend=c("16 DF","2.5 DF (LOOCV)"), col=c("red", "blue"),lty=1, lwd=2, cex=.8)
+
+gam.fit <- gam(Covid_Infection_Rate_Average ~ s(Median_Household_Income,4)+s(Population_Count_2019,5)+s(Median_Age,4)+s(MaskUsage,5)+s(Education,4))
+summary(gam.fit)
 
 # Performing Principal Component Analysis
 
