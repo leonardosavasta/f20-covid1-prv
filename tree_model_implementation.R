@@ -5,6 +5,8 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # par(bg = '#222222', fg = 'white', col='white', col.axis='white', col.lab='white', col.main='white', col.sub='white')
 # theme_set(theme_par())
 
+par(mfrow=c(1,1))
+
 rm(list=ls())
 
 library(randomForest)
