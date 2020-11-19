@@ -93,6 +93,10 @@ ggplot(covid_data
 ggplot(covid_data
        ,aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point()
 
+ggplot(covid_data
+       ,aes(x=FREQUENTLY + ALWAYS + RARELY, y=Covid_Infection_Rate_Average)) + geom_point()
+
+
 #calculating the correlation between variables
 
 cor(covid_data[4:15],covid_data[4:15])
