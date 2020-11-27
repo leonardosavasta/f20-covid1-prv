@@ -37,7 +37,7 @@ ggplot(covid_data
 
 # plotting County Population vs response
 ggplot(covid_data
-       ,aes(x=Population_Count_2019, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=Population_Count_2019, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth()
 
 #converting Median_Age column to numerical format
 covid_data$Median_Age <- as.numeric(covid_data$Median_Age)
@@ -77,7 +77,8 @@ ggplot(covid_data
 
 # plotting Median Household Income vs response
 ggplot(covid_data
-       ,aes(x=Median_Household_Income, y=Covid_Infection_Rate_Average)) + geom_point() 
+       ,aes(x=Median_Household_Income, y=Covid_Infection_Rate_Average)) + geom_point() +
+       geom_smooth(method="lm")
 
 #plotting mask usage data vs response
 
@@ -91,7 +92,7 @@ ggplot(covid_data
        ,aes(x=NEVER, y=Covid_Infection_Rate_Average)) + geom_point()
 
 ggplot(covid_data
-       ,aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth()
 
 ggplot(covid_data
        ,aes(x=FREQUENTLY + ALWAYS + RARELY, y=Covid_Infection_Rate_Average)) + geom_point()
