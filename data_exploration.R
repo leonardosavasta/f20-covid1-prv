@@ -25,19 +25,16 @@ names(covid_data[82])
 summary(covid_data)
 
 # plotting response variable distribution
-ggplot(covid_data, aes(x=Covid_Infection_Rate_Average)) + geom_histogram()
-
-# plotting response variable distribution after removing outliers
 ggplot(covid_data
        ,aes(x=Covid_Infection_Rate_Average)) +geom_histogram(aes(fill=..count..))
 
 #plotting population variable distribution
 ggplot(covid_data
-       ,aes(x=Population_Count_2019)) +geom_histogram(color="red")
+       ,aes(x=log(Population_Count_2019))) +geom_histogram(color="red")
 
 # plotting County Population vs response
 ggplot(covid_data
-       ,aes(x=Population_Count_2019, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth()
+       ,aes(x=log(Population_Count_2019), y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 #converting Median_Age column to numerical format
 covid_data$Median_Age <- as.numeric(covid_data$Median_Age)
@@ -64,15 +61,15 @@ ggplot(data = as_tibble(group_tags), mapping = aes(x=value)) + geom_bar() + labs
 
 # plotting age vs response
 ggplot(covid_data
-       ,aes(x=Median_Age,y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=Median_Age,y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 # plotting Education vs response
 
 ggplot(covid_data
-       ,aes(x=Less_than_high_school_diploma,y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=Less_than_high_school_diploma,y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 ggplot(covid_data
-       ,aes(x=bachelor_degree,y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=bachelor_degree,y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 
 # plotting Median Household Income vs response
@@ -83,19 +80,16 @@ ggplot(covid_data
 #plotting mask usage data vs response
 
 ggplot(covid_data
-       ,aes(x=ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 ggplot(covid_data
-       ,aes(x=FREQUENTLY, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=FREQUENTLY, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 ggplot(covid_data
-       ,aes(x=NEVER, y=Covid_Infection_Rate_Average)) + geom_point()
+       ,aes(x=NEVER, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth(method="lm")
 
 ggplot(covid_data
        ,aes(x=FREQUENTLY + ALWAYS, y=Covid_Infection_Rate_Average)) + geom_point() + geom_smooth()
-
-ggplot(covid_data
-       ,aes(x=FREQUENTLY + ALWAYS + RARELY, y=Covid_Infection_Rate_Average)) + geom_point()
 
 
 #calculating the correlation between variables
@@ -103,6 +97,3 @@ ggplot(covid_data
 cor(covid_data[4:15],covid_data[4:15])
 
 cor(covid_data[4:15],covid_data$Covid_Infection_Rate_Average)
-
-
-
