@@ -1,4 +1,5 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 rm(list=ls())
 
 # Read data with predictors and response
@@ -12,6 +13,8 @@ data <- covid_data[, c("Population_Count_2019", "Median_Age", "Median_Household_
 data$MaskUsage <- covid_data$RARELY + covid_data$FREQUENTLY + covid_data$ALWAYS
 data$Education <- covid_data$associate_degree + covid_data$bachelor_degree
 
+attach(data)
+
 #fitting a multiple linear regression model
 library(boot)
 lm.fit <- glm(Covid_Infection_Rate_Average ~ ., data=data)
@@ -24,55 +27,43 @@ cv.error.10$delta
 
 # ******* OUT OF SAMPLE PREDICTIONS *******
 
-set.seed(2020)
-#sampling data to obtain 6 observations
-sampledata=data[sample(nrow(data), 6),]
-sampledata
-
-#predicting the response for the sampled data
-pred.data <- data.frame(sampledata)
-predict(lm.fit, pred.data)
-
-
 # Constructing interesting predictions
 
-View(pred.data)
-
-# The following is similar to what we expect for a county such as Greenville
+# We change the median household income increasing it by 20,000 and 50,000
 pred.data <- data.frame(
-    Population_Count_2019= 500000,
+    Population_Count_2019= 20000,
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= 50000,
-    MaskUsage= 0.5
+    Median_Household_Income= c(30000,50000,80000),
+    MaskUsage= 0.3
 )
 
 predict(lm.fit, pred.data)
 
-# We change the median household income increasing it by 30,000
+# Our response variable (rate of infection) dramatically decreases almost linearly by modifying the median household income parameter
+
+# We change the Mask Usage to 0.5 and 0.9
 pred.data <- data.frame(
-    Population_Count_2019= 500000,
+    Population_Count_2019= 20000,
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= 80000,
-    MaskUsage= 0.5
+    Median_Household_Income= 30000,
+    MaskUsage= c(0.3,0.5,0.9)
 )
 
 predict(lm.fit, pred.data)
 
-# Our response variable (rate of infection) dramatically decreases
-# by modifying the median household income parameter
+# Our response variable (rate of infection) decreases by modifying the mask usage parameter
 
-# We change the Mask Usage from 0.5 to 0.9
+# We change the Population Count to 100000 and 1000000
 pred.data <- data.frame(
-    Population_Count_2019= 500000,
+    Population_Count_2019= c(20000,100000,1000000),
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= 50000,
-    MaskUsage= 0.9
+    Median_Household_Income= 30000,
+    MaskUsage= 0.3
 )
 
 predict(lm.fit, pred.data)
 
-# Our response variable (rate of infection) slightly decreases by modifying
-# the mask usage parameter
+# Our response variable (rate of infection) decreases as the population count increases
