@@ -134,7 +134,6 @@ final_data$Population_Count_2019 <- as.numeric(gsub(",","", final_data$Populatio
 
 #creating the response variable
 final_data$Covid_Infection_Rate_Average <- apply(final_data[,seq(16,80, by=3)], 1, function(x) calculate_average_proportion(x))
-final_data$Covid_Infection_Rate <- ((final_data$`Confirmed_07-29-2020` - final_data$`Confirmed_06-17-2020`)/ final_data$`Confirmed_06-17-2020`)*100
 
 #rearranging columns
 final_data <- final_data %>% relocate("FIPS")
