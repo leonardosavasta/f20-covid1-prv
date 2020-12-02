@@ -31,4 +31,3 @@ Some of the major fields/predictors in the final dataset are:
 - deaths_mm-dd-yyyy: The total number of deaths from Covid-19, including both confirmed and probable on that particular day
 - recovered_mm-dd-yyyy: The total number of recovered cases from Covid-19
 - Covid_Infection_Rate_Average: The average percentage change in Covid-19 cases per day in that county between June 17 and July 29
-- Covid_Infection_Rate: The percentage increase in COVID19 cases in each county between June 17 and July 29
