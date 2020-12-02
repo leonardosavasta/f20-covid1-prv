@@ -14,7 +14,7 @@ The data folder consists of several datasets in .csv format collected from vario
 - population_data.csv file contains the population figures for each county from 2010 to 2019.
 - The other datasets include data on COVID19 cases between June 17 and July 29.
 
-We merge all these datasets into a single dataset (i.e. final_data.csv), clean and transform the data according to our needs using the DataCleanAndMerge.R file. The final dataset consists of 2065 rows and 83 columns in total.
+We merge all these datasets into a single dataset (i.e. final_data.csv), clean and transform the data according to our needs using the DataCleanAndMerge.R file. The final dataset consists of 2045 rows and 82 columns in total.
 Some of the major fields/predictors in the final dataset are:
 - FIPS: County codes
 - County: County names
@@ -29,5 +29,6 @@ Some of the major fields/predictors in the final dataset are:
 - ALWAYS: The estimated share of people in this county who would say always
 - confirmed_mm-dd-yyyy: The number of laboratory confirmed Covid-19 cases on that particular day
 - deaths_mm-dd-yyyy: The total number of deaths from Covid-19, including both confirmed and probable on that particular day
-- recovered_mm-dd-yyyy (The total number of recovered cases from Covid-19
+- recovered_mm-dd-yyyy: The total number of recovered cases from Covid-19
+- Covid_Infection_Rate_Average: The average percentage change in Covid-19 cases per day in that county between June 17 and July 29
 - Covid_Infection_Rate: The percentage increase in COVID19 cases in each county between June 17 and July 29
