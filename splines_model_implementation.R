@@ -103,14 +103,12 @@ biplot(prc.data, scale=0, xlim=c(-5,5), ylim=c(-5,5), xlabs=rep(".", nrow(data))
 
 # Constructing interesting predictions
 
-# The following is similar to what we expect for a county such as Greenville
-
-# We change the median household income increasing it by 30,000 and 60,000
+# We change the median household income increasing it by 20,000 and 50,000
 pred.data <- data.frame(
-    Population_Count_2019= 500000,
+    Population_Count_2019= 20000,
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= c(50000,80000,110000),
+    Median_Household_Income= c(30000,50000,80000),
     MaskUsage= 0.3
 )
 
@@ -120,10 +118,10 @@ predict(gam.fit, pred.data)
 
 # We change the Mask Usage to 0.5 and 0.9
 pred.data <- data.frame(
-    Population_Count_2019= 500000,
+    Population_Count_2019= 20000,
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= 50000,
+    Median_Household_Income= 30000,
     MaskUsage= c(0.3,0.5,0.9)
 )
 
@@ -131,18 +129,19 @@ predict(gam.fit, pred.data)
 
 # Our response variable (rate of infection) decreases by modifying the mask usage parameter
 
-# We change the Population Count to 2500000 and 5000000
+# We change the Population Count to 100000 and 1000000
 pred.data <- data.frame(
-    Population_Count_2019= c(500000,2500000,5000000),
+    Population_Count_2019= c(20000,100000,1000000),
     Education= 0.30,
     Median_Age= 40,
-    Median_Household_Income= 50000,
+    Median_Household_Income= 30000,
     MaskUsage= 0.3
 )
 
 predict(gam.fit, pred.data)
 
-# Our response variable (rate of infection) increases for a medium sized population but surprisingly decreases for a very large population
+# Our response variable (rate of infection) decreases as the population count increases
+
 
 # ******* FITTING ALTERNATIVE MODELS *******
 gam2 <- gam(Covid_Infection_Rate_Average ~ s(log1p(Median_Age), 2), data=data)
@@ -162,3 +161,4 @@ par(mfrow=c(3,2))
 par(mar=c(3,3,3,3))
 dev.new(width=5, height=4)
 plot(gam2, se=TRUE, col="blue")
+
